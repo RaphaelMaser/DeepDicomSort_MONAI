@@ -1,0 +1,6 @@
+/data
+/cache
+/Trained_Models
+/__pycache__
+/test.ipynb
+/utils/__pycache__

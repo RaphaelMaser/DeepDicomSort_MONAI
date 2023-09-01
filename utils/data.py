@@ -9,7 +9,7 @@ import tensorflow as tf
 import yaml
 from yaml import Loader
 from tensorflow.keras.models import load_model
-from monai.transforms import Compose, LoadImaged, Orientationd, AsChannelLastd, ScaleIntensityd, Resized, ScaleIntensity
+from monai.transforms import Compose, LoadImaged, Orientationd, AsChannelLastd, ScaleIntensityd, Resized, ScaleIntensity, ToNumpyd, SplitDimd
 import numpy as np
 from copy import deepcopy
 import pickle
@@ -85,10 +85,12 @@ def get_data(discovered_files, label_indicator, mode):
 
 def create_transforms():
     transforms = Compose([
-        LoadImaged(keys=["image"], reader="NibabelReader", ensure_channel_first=True, image_only=False),
+        LoadImaged(keys=["image"], reader="NibabelReader", ensure_channel_first=True),
         Orientationd(keys=["image"], axcodes="RAS"),
         Resized(keys=["image"], spatial_size=[256, 256, 25], mode="trilinear"),
-        #ScaleIntensityd(keys=["image"], minv=0, maxv=1, channel_wise=True),
+        SplitDimd(keys=["image"], dim=3, keepdim=False),
+        ScaleIntensityd(keys=[f"image_{i}" for i in range(25)], minv=0, maxv=1, channel_wise=True),
+        ToNumpyd(keys=[f"image_{i}" for i in range(25)])
     ])
     return transforms
     
@@ -96,37 +98,37 @@ def create_transforms():
 def generator(monai_dataset):
     '''
     Dimensionality
-    1. data : [C, W, H, D]
-    2. data_channel_last: [D, W, H, C]
+    1. data : dict with 25 images of dimension [C, W, H]
+    2. data_channel_last: dict with 25 images of dimension [W, H, C]
     3. slice: [W, H, C]
     '''
     for data in monai_dataset:
-        data_channel_first = data
-        image_shape = data["image"].shape
         #data_channel_first["image"] = data_channel_first["image"].view((image_shape[3], image_shape[1], image_shape[2], image_shape[0]))
-        data_channel_first["image"] = data_channel_first["image"].swapaxes(0, 3)
-        num_slices = data_channel_last["image"].shape[0]
-        slice_array = []
-        for i in range(num_slices):
-            image_slice = deepcopy(data_channel_last) #TODO: more efficient way to do this?
-            image_slice["image"] = image_slice["image"][i, :, :, :]
-            image_slice["image"] = ScaleIntensityd(keys=["image"], minv=0, maxv=1, channel_wise=False)(image_slice)  
-            slice_array.append(image_slice)
+        
+        # for i in range(25):
+        #     image_slice = deepcopy(data_channel_last) #TODO: more efficient way to do this?
+        #     image_slice["image"] = image_slice["image"][i, :, :, :]
+        #     image_slice["image"] = ScaleIntensityd(keys=["image"], minv=0, maxv=1, channel_wise=False)(image_slice)  
+        #     slice_array.append(image_slice)
             
-        for image_slice in slice_array:
-
-            image = image_slice["image"]
-            image_shape = image.shape
-            numpy_image = image.detach().cpu().numpy() #TODO: put the convertion earlier in the pipeline
+        for i in range(25):
+            slice_number = f"image_{i}"
+            image_slice = data[slice_number]
             
+            # convert from (C, W, H) to (W, H, C)
+            image_slice[slice_number] = image_slice[slice_number].moveaxis(0, 2)
+            
+            # add batch dimension: (W, H, C) -> (1, W, H, C)
             numpy_image = numpy_image[np.newaxis, :, :, :]
             tf_image = tf.convert_to_tensor(numpy_image)
 
             extra_data = np.zeros((1))
             extra_data = extra_data[np.newaxis, :]
             tf_extra_data = tf.convert_to_tensor(extra_data)
+            
             label = slice["label"]
             tf_label = tf.convert_to_tensor(label)
+            
             yield [tf_image, tf_extra_data], tf_label
 
 def create_dataset(data, transforms):
