@@ -1,0 +1,74 @@
+models:
+  train_data: Trained_Models/model_brain_tumor_train_data.hdf5
+  all_data: Trained_Models/model_all_brain_tumor_data.hdf5
+  
+# TODO check validity of the labels
+labels:  
+  0: 
+    modality: T1
+    bids:
+      type: anat
+      format: DICOM
+      provenance:
+        attributes:
+          MRAcquisitionType: (3D|2D)
+        bids:
+          suffix: T1w
+  1: 
+    modality: T1c
+    bids:
+      type: anat
+      format: DICOM
+      provenance:
+        attributes:
+          MRAcquisitionType: (3D|2D)
+        bids: 
+          suffix: T1w
+          ce: UNKNOWN
+        meta:
+          ContrastBolusIngredient: UNKNOWN
+  2: 
+    modality: T2
+    bids:
+      type: anat
+      format: DICOM
+      provenance:
+        attributes:
+          SequenceVariant: "['SK', 'SP']"
+        bids:
+          suffix: T2w
+  3: 
+    modality: PWI
+    bids:
+      type: perf
+      format: DICOM
+  4: 
+    modality: FLAIR
+    bids:
+      type: anat
+      format: DICOM
+      provenance:
+        attributes:
+          ScanningSequence: .*'?IR'?.*
+        bids:
+          suffix: FLAIR
+  5: 
+    modality: DWI
+    bids:
+      type: dwi
+      format: DICOM
+  6: 
+    modality: Derived imaging
+    bids:
+      type: extra_data
+      format: DICOM
+  7: 
+    modality: PWI-DSC
+    bids:
+      type: perf
+      format: DICOM
+      provenance:
+        bids:
+          ce: GADOLINIUM
+        meta: 
+          ContrastBolusIngredient: GADOLINIUM
