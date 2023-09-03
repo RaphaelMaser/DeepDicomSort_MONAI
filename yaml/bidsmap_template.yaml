@@ -1,237 +1,210 @@
-Options:
-# --------------------------------------------------------------------------------
-# General options and plugins
-# --------------------------------------------------------------------------------
-  bidscoin:
-    version: 4.0.0                  # BIDScoin version (should correspond with the version in ../bidscoin/version.txt)
-    bidsignore: mrs/;extra_data/    # Semicolon-separated list of entries that are added to the .bidsignore file (for more info, see BIDS specifications), e.g. extra_data/;pet/;myfile.txt;yourfile.csv
-    subprefix: sub-                 # The subject prefix of the source data
-    sesprefix: ses-                 # The session prefix of the source data
-    unknowntypes: [mrs, extra_data] # A list of datatypes that are converted to BIDS-like datatype folders
-    ignoretypes: [exclude]          # A list of datatypes that are excluded / not converted to BIDS
-    unzip:                          # Wildcard pattern to select tarball/zip-files in the source folders that need to be unzipped (in a tempdir) to expose the data, e.g. '*.tar.gz'
-  plugins:                          # List of plugins with plugin-specific key-value pairs (that can be used by the plugin)
-    dcm2niix2bids:                  # See dcm2niix -h and https://www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage#General_Usage for more info
-      command: dcm2niix             # Command to run dcm2niix, e.g. "module add dcm2niix/1.0.20180622; dcm2niix" or "PATH=/opt/dcm2niix/bin:$PATH; dcm2niix" or /opt/dcm2niix/bin/dcm2niix or 'C:\"Program Files"\dcm2niix\dcm2niix.exe' (use quotes to deal with whitespaces in the path)
-      args: -b y -z y -i n -l n     # Argument string that is passed to dcm2niix. Tip: SPM users may want to use '-z n' (which produces unzipped NIfTI's, see dcm2niix -h for more information)
-      anon: y                       # Set this anonymization flag to 'y' to round off age and discard acquisition date from the meta data
-      meta: [.json, .tsv, .tsv.gz]  # The file extensions of the equally named metadata sourcefiles that are copied over to the BIDS sidecar files
-#    spec2nii2bids:                  # The settings for the spec2nii2bids plugin
-#      command: spec2nii             # Command to run spec2nii, e.g. "module add spec2nii; spec2nii" or "PATH=/opt/spec2nii/bin:$PATH; spec2nii" or /opt/spec2nii/bin/spec2nii or 'C:\"Program Files"\spec2nii\spec2nii.exe' (note the quotes to deal with the whitespace)
-#      args:                         # Argument string that is passed to spec2nii (see spec2nii -h for more information)
-#      anon: y                       # Set this anonymization flag to 'y' to round off age and discard acquisition date from the meta data
-#      meta: [.json, .tsv, .tsv.gz]  # The file extensions of the equally named metadata sourcefiles that are copied over to the BIDS sidecar files
-#      multiraid: 2                  # The mapVBVD argument for selecting the multiraid Twix file to load (default = 2, i.e. 2nd file)
-#    pet2bids:
-#      command: dcm2niix4pet
-#      args:
-#      anon:
-#      meta: [.json, .tsv]
+bidsmap:  
+  Options:
+  # --------------------------------------------------------------------------------
+  # General options and plugins
+  # --------------------------------------------------------------------------------
+    bidscoin:
+      version: 4.0.0                  # BIDScoin version (should correspond with the version in ../bidscoin/version.txt)
+      bidsignore: mrs/;extra_data/    # Semicolon-separated list of entries that are added to the .bidsignore file (for more info, see BIDS specifications), e.g. extra_data/;pet/;myfile.txt;yourfile.csv
+      subprefix: sub-                 # The subject prefix of the source data
+      sesprefix: ses-                 # The session prefix of the source data
+      unknowntypes: [mrs, extra_data] # A list of datatypes that are converted to BIDS-like datatype folders
+      ignoretypes: [exclude]          # A list of datatypes that are excluded / not converted to BIDS
+      unzip:                          # Wildcard pattern to select tarball/zip-files in the source folders that need to be unzipped (in a tempdir) to expose the data, e.g. '*.tar.gz'
+    plugins:                          # List of plugins with plugin-specific key-value pairs (that can be used by the plugin)
+      dcm2niix2bids:                  # See dcm2niix -h and https://www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage#General_Usage for more info
+        command: dcm2niix             # Command to run dcm2niix, e.g. "module add dcm2niix/1.0.20180622; dcm2niix" or "PATH=/opt/dcm2niix/bin:$PATH; dcm2niix" or /opt/dcm2niix/bin/dcm2niix or 'C:\"Program Files"\dcm2niix\dcm2niix.exe' (use quotes to deal with whitespaces in the path)
+        args: -b y -z y -i n -l n     # Argument string that is passed to dcm2niix. Tip: SPM users may want to use '-z n' (which produces unzipped NIfTI's, see dcm2niix -h for more information)
+        anon: y                       # Set this anonymization flag to 'y' to round off age and discard acquisition date from the meta data
+        meta: [.json, .tsv, .tsv.gz]  # The file extensions of the equally named metadata sourcefiles that are copied over to the BIDS sidecar files
+  #    spec2nii2bids:                  # The settings for the spec2nii2bids plugin
+  #      command: spec2nii             # Command to run spec2nii, e.g. "module add spec2nii; spec2nii" or "PATH=/opt/spec2nii/bin:$PATH; spec2nii" or /opt/spec2nii/bin/spec2nii or 'C:\"Program Files"\spec2nii\spec2nii.exe' (note the quotes to deal with the whitespace)
+  #      args:                         # Argument string that is passed to spec2nii (see spec2nii -h for more information)
+  #      anon: y                       # Set this anonymization flag to 'y' to round off age and discard acquisition date from the meta data
+  #      meta: [.json, .tsv, .tsv.gz]  # The file extensions of the equally named metadata sourcefiles that are copied over to the BIDS sidecar files
+  #      multiraid: 2                  # The mapVBVD argument for selecting the multiraid Twix file to load (default = 2, i.e. 2nd file)
+  #    pet2bids:
+  #      command: dcm2niix4pet
+  #      args:
+  #      anon:
+  #      meta: [.json, .tsv]
 
 
-DICOM:
-# --------------------------------------------------------------------------------
-# DICOM key-value heuristics (DICOM fields that are mapped to the BIDS labels)
-# --------------------------------------------------------------------------------
-  subject: <<filepath:/sub-(.*?)/>>   # This filesystem property extracts the subject label from the source directory. NB: Any property or attribute can be used as subject-label, e.g. <PatientID>
-  session: <<filepath:/sub-.*?/ses-(.*?)/>>   # This filesystem property extracts the subject label from the source directory. NB: Any property or attribute can be used as session-label, e.g. <StudyID>
+  DICOM:
+  # --------------------------------------------------------------------------------
+  # DICOM key-value heuristics (DICOM fields that are mapped to the BIDS labels)
+  # --------------------------------------------------------------------------------
+    subject: <<filepath:/sub-(.*?)/>>   # This filesystem property extracts the subject label from the source directory. NB: Any property or attribute can be used as subject-label, e.g. <PatientID>
+    session: <<filepath:/sub-.*?/ses-(.*?)/>>   # This filesystem property extracts the subject label from the source directory. NB: Any property or attribute can be used as session-label, e.g. <StudyID>
 
-  anat:       # ----------------------- All anatomical runs --------------------
-  - provenance:                   # The fullpath name of the DICOM file from which the attributes are read. Serves also as a look-up key to find a run in the bidsmap
-    properties: &fileprop         # This is an optional (stub) entry of properties matching (could be added to any run-item)
-      filepath:                   # File folder, e.g. ".*/Parkinson/.*" or ".*(phantom|bottle).*"
-      filename:                   # File name, e.g. ".*fmap.*" or ".*(fmap|field.?map|B0.?map).*"
-      filesize:                   # File size, e.g. "2[4-6]\d MB" for matching files between 240-269 MB
-      nrfiles:                    # Number of files in the folder
-    attributes: &anat_dicomattr   # An empty / non-matching reference dictionary that can be derefenced in other run-items of this data type
-      Modality:
-      ProtocolName:
-      SeriesDescription:
-      ImageType:
-      SequenceName:
-      SequenceVariant:
-      ScanningSequence:
-      MRAcquisitionType:
-      SliceThickness:
-      FlipAngle:
-      EchoNumbers:
-      EchoTime:
-      EffectiveEchoTime:
-      RepetitionTime:
-      InPlanePhaseEncodingDirection:
-    bids: &anat_dicoment_nonparametric  # See: schema/datatypes/anat.yaml
-      acq: <SeriesDescription>    # This will be expanded by the bidsmapper (so the user can edit it in the bidseditor)
-      ce:
-      rec:
-      run: <<1>>                  # This will be updated dynamically during bidscoiner runtime (as it depends on the already existing files)
-      part: ['', mag, phase, real, imag, 0]   # # This BIDS value list will be shown as a dropdown menu in the bidseditor with the first (empty) item selected (as indicated by the last item, i.e. 0)
-      suffix: T1w
-    meta:                         # This is an optional entry for meta-data that will be appended to the json sidecar files produced by dcm2niix
-  - provenance:
-    attributes:
-      <<: *anat_dicomattr
-    bids: 
-      <<: *anat_dicoment_nonparametric
+entry_templates:
+  DICOM:
+    anat:       # ----------------------- All anatomical runs --------------------
+    - provenance:                   # The fullpath name of the DICOM file from which the attributes are read. Serves also as a look-up key to find a run in the bidsmap
+      properties: &fileprop         # This is an optional (stub) entry of properties matching (could be added to any run-item)
+        filepath:                   # File folder, e.g. ".*/Parkinson/.*" or ".*(phantom|bottle).*"
+        filename:                   # File name, e.g. ".*fmap.*" or ".*(fmap|field.?map|B0.?map).*"
+        filesize:                   # File size, e.g. "2[4-6]\d MB" for matching files between 240-269 MB
+        nrfiles:                    # Number of files in the folder
+      attributes: &anat_dicomattr   # An empty / non-matching reference dictionary that can be derefenced in other run-items of this data type
+        Modality:
+        ProtocolName:
+        SeriesDescription:
+        ImageType:
+        SequenceName:
+        SequenceVariant:
+        ScanningSequence:
+        MRAcquisitionType:
+        SliceThickness:
+        FlipAngle:
+        EchoNumbers:
+        EchoTime:
+        EffectiveEchoTime:
+        RepetitionTime:
+        InPlanePhaseEncodingDirection:
+      bids: &anat_dicoment_nonparametric  # See: schema/datatypes/anat.yaml
+        acq: <SeriesDescription>    # This will be expanded by the bidsmapper (so the user can edit it in the bidseditor)
+        ce:
+        rec:
+        run: <<1>>                  # This will be updated dynamically during bidscoiner runtime (as it depends on the already existing files)
+        part: ['', mag, phase, real, imag, 0]   # # This BIDS value list will be shown as a dropdown menu in the bidseditor with the first (empty) item selected (as indicated by the last item, i.e. 0)
+        suffix: T1w
+      meta:                         # This is an optional entry for meta-data that will be appended to the json sidecar files produced by dcm2niix
 
 
-  perf:       # ----------------------- All perfusion runs ---------------------
-  - provenance:
-    attributes: &perf_dicomattr
-      Modality:
-      ProtocolName:
-      SeriesDescription:
-      ImageType:
-      SequenceName:
-      SequenceVariant:
-      ScanningSequence:
-      MRAcquisitionType:
-      SliceThickness:
-      FlipAngle:
-      EchoNumbers:
-      EchoTime:
-      EffectiveEchoTime:
-      RepetitionTime:
-      InPlanePhaseEncodingDirection:
-    bids: &perf_dicoment_group1         # See: schema/datatypes/perf.yaml
-      acq: <ProtocolName>
-      rec: <SeriesDescription>
-      dir:
-      run: <<1>>
-      suffix: asl
-    meta: &perf_meta
-      ArterialSpinLabelingType: "CASL / PCASL / PASL"
-      PostLabelingDelay:
-      BackgroundSuppression:
-      M0Type: "Separate / Included / Estimate / Absent"
-      RepetitionTimePreparation:
-      VascularCrushing:
-      AcquisitionVoxelSize:
-      B0FieldSource:
-      B0FieldIdentifier:
-  - provenance:
-    attributes:
-      <<: *perf_dicomattr
-    bids: 
-      <<: *perf_dicoment_group1
-    meta: 
-      <<: *perf_meta
+    perf:       # ----------------------- All perfusion runs ---------------------
+    - provenance:
+      attributes: &perf_dicomattr
+        Modality:
+        ProtocolName:
+        SeriesDescription:
+        ImageType:
+        SequenceName:
+        SequenceVariant:
+        ScanningSequence:
+        MRAcquisitionType:
+        SliceThickness:
+        FlipAngle:
+        EchoNumbers:
+        EchoTime:
+        EffectiveEchoTime:
+        RepetitionTime:
+        InPlanePhaseEncodingDirection:
+      bids: &perf_dicoment_group1         # See: schema/datatypes/perf.yaml
+        acq: <ProtocolName>
+        rec: <SeriesDescription>
+        dir:
+        run: <<1>>
+        suffix: asl
+      meta: &perf_meta
+        ArterialSpinLabelingType: "CASL / PCASL / PASL"
+        PostLabelingDelay:
+        BackgroundSuppression:
+        M0Type: "Separate / Included / Estimate / Absent"
+        RepetitionTimePreparation:
+        VascularCrushing:
+        AcquisitionVoxelSize:
+        B0FieldSource:
+        B0FieldIdentifier:
 
-  dwi:        # ----------------------- All diffusion runs ---------------------
-  - provenance:                         # The first item with empty attributes will not match anything but is used by default when changing datatype in the bidseditor GUI -> suffix = dwi
-    attributes: &dwi_dicomattr
-      Modality:
-      ProtocolName:
-      SeriesDescription:
-      ImageType:
-      SequenceName:
-      SequenceVariant:
-      ScanningSequence:
-      MRAcquisitionType:
-      SliceThickness:
-      FlipAngle:
-      EchoNumbers:
-      EchoTime:
-      EffectiveEchoTime:
-      RepetitionTime:
-      InPlanePhaseEncodingDirection:
-    bids: &dwi_dicoment_DWI             # See: schema/datatypes/dwi.yaml
-      acq: <ProtocolName>               # More consistent between SBREF and PHYSIO files
-      rec:
-      dir:
-      run: <<1>>
-      part: ['', mag, phase, real, imag, 0]
-      suffix: dwi
-    meta: &dwi_meta
-      B0FieldSource:
-      B0FieldIdentifier:
-  - provenance:
-    attributes:
-      <<: *dwi_dicomattr
-    bids: 
-      <<: *dwi_dicoment_DWI
-    meta: 
-      <<: *dwi_meta
+    dwi:        # ----------------------- All diffusion runs ---------------------
+    - provenance:                         # The first item with empty attributes will not match anything but is used by default when changing datatype in the bidseditor GUI -> suffix = dwi
+      attributes: &dwi_dicomattr
+        Modality:
+        ProtocolName:
+        SeriesDescription:
+        ImageType:
+        SequenceName:
+        SequenceVariant:
+        ScanningSequence:
+        MRAcquisitionType:
+        SliceThickness:
+        FlipAngle:
+        EchoNumbers:
+        EchoTime:
+        EffectiveEchoTime:
+        RepetitionTime:
+        InPlanePhaseEncodingDirection:
+      bids: &dwi_dicoment_DWI             # See: schema/datatypes/dwi.yaml
+        acq: <ProtocolName>               # More consistent between SBREF and PHYSIO files
+        rec:
+        dir:
+        run: <<1>>
+        part: ['', mag, phase, real, imag, 0]
+        suffix: dwi
+      meta: &dwi_meta
+        B0FieldSource:
+        B0FieldIdentifier:
 
-  extra_data: # ----------------------- All extra data -------------------------
-  - provenance:
-    attributes: &extra_data_attributes_dicom
-      Modality:
-      ProtocolName:
-      SeriesDescription:
-      ImageType:
-      SequenceName:
-      SequenceVariant:
-      ScanningSequence:
-      MRAcquisitionType:
-      SliceThickness:
-      FlipAngle:
-      EchoNumbers:
-      EchoTime:
-      EffectiveEchoTime:
-      RepetitionTime:
-      InPlanePhaseEncodingDirection:
-    bids: &extra_data_bids_dicom
-      acq: <ProtocolName>
-      inv:
-      rec:
-      ce:
-      task:
-      echo: <EchoNumbers>
-      dir:
-      run: <<1>>
-      mod: <SeriesDescription>
-      part: ['', mag, phase, real, imag, 0]
-      suffix: <ScanningSequence>
-  - provenance:
-    attributes:
-      <<: *anat_dicomattr
-      ProtocolName: (?i).*TSE.*vfl.*
-      ImageType:                        # Make an exception for this non-NORM TSE T2w-image (i.e. ['ORIGINAL', 'PRIMARY', 'M', 'ND'], the filtered 'NORM' version is saved in 'anat')
-      SequenceVariant: .*'SK', 'SP'.*
-      ScanningSequence: SE
-    bids:
-      <<: *anat_dicoment_nonparametric
-      part: ['', mag, phase, real, imag, 0]
-      suffix: T2w
-  - provenance:                         # The last item, taken if nothing else matches
-    attributes: *extra_data_attributes_dicom
-    bids: *extra_data_bids_dicom
+    extra_data: # ----------------------- All extra data -------------------------
+    - provenance:
+      attributes: &extra_data_attributes_dicom
+        Modality:
+        ProtocolName:
+        SeriesDescription:
+        ImageType:
+        SequenceName:
+        SequenceVariant:
+        ScanningSequence:
+        MRAcquisitionType:
+        SliceThickness:
+        FlipAngle:
+        EchoNumbers:
+        EchoTime:
+        EffectiveEchoTime:
+        RepetitionTime:
+        InPlanePhaseEncodingDirection:
+      bids: &extra_data_bids_dicom
+        acq: <ProtocolName>
+        inv:
+        rec:
+        ce:
+        task:
+        echo: <EchoNumbers>
+        dir:
+        run: <<1>>
+        mod: <SeriesDescription>
+        part: ['', mag, phase, real, imag, 0]
+        suffix: <ScanningSequence>
+    - provenance:                         # The last item, taken if nothing else matches
+      attributes: *extra_data_attributes_dicom
+      bids: *extra_data_bids_dicom
 
-  exclude:    # ----------------------- Data that will be left out -------------
-  - provenance:
-    attributes: &leaveout_attributes_dicom
-      Modality:
-      ProtocolName:
-      SeriesDescription:
-      ImageType:
-      SequenceName:
-      SequenceVariant:
-      ScanningSequence:
-      MRAcquisitionType:
-      SliceThickness:
-      FlipAngle:
-      EchoNumbers:
-      EchoTime:
-      EffectiveEchoTime:
-      RepetitionTime:
-      InPlanePhaseEncodingDirection:
-    bids: &leaveout_bids_dicom
-      acq: <ProtocolName>
-      task: <SeriesDescription>
-      echo: <EchoNumbers>
-      suffix: <ScanningSequence>
-  - provenance:
-    attributes:
-      <<: *leaveout_attributes_dicom
-      ProtocolName: (?i).*(Scout|localizer|t2_haste_sag_ipat2).*
-    bids: *leaveout_bids_dicom
-  - provenance:
-    attributes:
-      <<: *leaveout_attributes_dicom
-      ImageType: .*'DERIVED'.*
-      ProtocolName: (?i)((?!MP2RAGE).)*     # Make an exception for DERIVED 3D MP2RAGE UNI-images
-    bids:
-      <<: *leaveout_bids_dicom
-      rec: DERIVED
+    # exclude:    # ----------------------- Data that will be left out -------------
+    # - provenance:
+    #   attributes: &leaveout_attributes_dicom
+    #     Modality:
+    #     ProtocolName:
+    #     SeriesDescription:
+    #     ImageType:
+    #     SequenceName:
+    #     SequenceVariant:
+    #     ScanningSequence:
+    #     MRAcquisitionType:
+    #     SliceThickness:
+    #     FlipAngle:
+    #     EchoNumbers:
+    #     EchoTime:
+    #     EffectiveEchoTime:
+    #     RepetitionTime:
+    #     InPlanePhaseEncodingDirection:
+    #   bids: &leaveout_bids_dicom
+    #     acq: <ProtocolName>
+    #     task: <SeriesDescription>
+    #     echo: <EchoNumbers>
+    #     suffix: <ScanningSequence>
+    # - provenance:
+    #   attributes:
+    #     <<: *leaveout_attributes_dicom
+    #     ProtocolName: (?i).*(Scout|localizer|t2_haste_sag_ipat2).*
+    #   bids: *leaveout_bids_dicom
+    # - provenance:
+    #   attributes:
+    #     <<: *leaveout_attributes_dicom
+    #     ImageType: .*'DERIVED'.*
+    #     ProtocolName: (?i)((?!MP2RAGE).)*     # Make an exception for DERIVED 3D MP2RAGE UNI-images
+    #   bids:
+    #     <<: *leaveout_bids_dicom
+    #     rec: DERIVED
 
 

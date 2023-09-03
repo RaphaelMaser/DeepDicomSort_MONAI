@@ -1,6 +1,6 @@
 models:
-  train_data: Trained_Models/model_brain_tumor_train_data.hdf5
-  all_data: Trained_Models/model_all_brain_tumor_data.hdf5
+  train_data: trained_models/model_brain_tumor_train_data.hdf5
+  all_data: trained_models/model_all_brain_tumor_data.hdf5
   
 # TODO check validity of the labels
 labels:  
@@ -9,34 +9,31 @@ labels:
     bids:
       type: anat
       format: DICOM
-      provenance:
-        attributes:
-          MRAcquisitionType: (3D|2D)
-        bids:
-          suffix: T1w
+      attributes:
+        MRAcquisitionType: (3D|2D)
+      bids:
+        suffix: T1w
   1: 
     modality: T1c
     bids:
       type: anat
       format: DICOM
-      provenance:
-        attributes:
-          MRAcquisitionType: (3D|2D)
-        bids: 
-          suffix: T1w
-          ce: UNKNOWN
-        meta:
-          ContrastBolusIngredient: UNKNOWN
+      attributes:
+        MRAcquisitionType: (3D|2D)
+      bids: 
+        suffix: T1w
+        ce: UNKNOWN
+      meta:
+        ContrastBolusIngredient: UNKNOWN
   2: 
     modality: T2
     bids:
       type: anat
       format: DICOM
-      provenance:
-        attributes:
-          SequenceVariant: "['SK', 'SP']"
-        bids:
-          suffix: T2w
+      attributes:
+        SequenceVariant: "['SK', 'SP']"
+      bids:
+        suffix: T2w
   3: 
     modality: PWI
     bids:
@@ -47,11 +44,10 @@ labels:
     bids:
       type: anat
       format: DICOM
-      provenance:
-        attributes:
-          ScanningSequence: .*'?IR'?.*
-        bids:
-          suffix: FLAIR
+      attributes:
+        ScanningSequence: .*'?IR'?.*
+      bids:
+        suffix: FLAIR
   5: 
     modality: DWI
     bids:
@@ -67,8 +63,7 @@ labels:
     bids:
       type: perf
       format: DICOM
-      provenance:
-        bids:
-          ce: GADOLINIUM
-        meta: 
-          ContrastBolusIngredient: GADOLINIUM
+      bids:
+        ce: GADOLINIUM
+      meta: 
+        ContrastBolusIngredient: GADOLINIUM

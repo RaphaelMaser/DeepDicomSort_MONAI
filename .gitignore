@@ -1,6 +1,5 @@
 /data
 /cache
-/Trained_Models
+/trained_models
 /__pycache__
-/test.ipynb
 /utils/__pycache__

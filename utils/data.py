@@ -85,7 +85,7 @@ def get_data(discovered_files, label_indicator, mode):
 
 def create_transforms():
     transforms = Compose([
-        LoadImaged(keys=["image"], reader="NibabelReader", ensure_channel_first=True),
+        LoadImaged(keys=["image"], reader="NibabelReader", ensure_channel_first=True, image_only=False),
         Orientationd(keys=["image"], axcodes="RAS"),
         Resized(keys=["image"], spatial_size=[256, 256, 25], mode="trilinear"),
         SplitDimd(keys=["image"], dim=3, keepdim=False),
@@ -113,23 +113,18 @@ def generator(monai_dataset):
             
         for i in range(25):
             slice_number = f"image_{i}"
-            image_slice = data[slice_number]
             
             # convert from (C, W, H) to (W, H, C)
-            image_slice[slice_number] = image_slice[slice_number].moveaxis(0, 2)
+            data[slice_number] = np.moveaxis(data[slice_number], 0, 2)
             
             # add batch dimension: (W, H, C) -> (1, W, H, C)
-            numpy_image = numpy_image[np.newaxis, :, :, :]
-            tf_image = tf.convert_to_tensor(numpy_image)
+            data[slice_number] = data[slice_number][np.newaxis, :, :, :]
 
             extra_data = np.zeros((1))
             extra_data = extra_data[np.newaxis, :]
             tf_extra_data = tf.convert_to_tensor(extra_data)
-            
-            label = slice["label"]
-            tf_label = tf.convert_to_tensor(label)
-            
-            yield [tf_image, tf_extra_data], tf_label
+                        
+            yield [data[slice_number], tf_extra_data], data["label"]
 
 def create_dataset(data, transforms):
     print("Create dataset")
