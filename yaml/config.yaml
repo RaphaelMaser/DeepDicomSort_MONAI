@@ -10,7 +10,7 @@ labels:
       type: anat
       format: DICOM
       attributes:
-        MRAcquisitionType: (3D|2D)
+        #MRAcquisitionType: (3D|2D)
       bids:
         suffix: T1w
   1: 
@@ -19,7 +19,7 @@ labels:
       type: anat
       format: DICOM
       attributes:
-        MRAcquisitionType: (3D|2D)
+        #MRAcquisitionType: (3D|2D)
       bids: 
         suffix: T1w
         ce: UNKNOWN
@@ -31,7 +31,7 @@ labels:
       type: anat
       format: DICOM
       attributes:
-        SequenceVariant: "['SK', 'SP']"
+        #SequenceVariant: ['SK', 'SP']
       bids:
         suffix: T2w
   3: 
@@ -45,7 +45,7 @@ labels:
       type: anat
       format: DICOM
       attributes:
-        ScanningSequence: .*'?IR'?.*
+        #ScanningSequence: .*'?IR'?.*
       bids:
         suffix: FLAIR
   5: 

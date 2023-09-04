@@ -71,9 +71,10 @@ def construct_regex(df):
                 regex += f"({key})"
             else:
                 regex += "|" + f"({key})"
-            
-        filter[row["prediction"]] = regex
         
+        #regex = "(?i)" + "\s*(" + regex + ")\s*"
+        filter[row["prediction"]] = regex
+    
     return filter
     
 
@@ -91,7 +92,6 @@ def construct_bidsmap(output, label_name):
         bidsmap_template = yaml.safe_load(f)
         
     bidsmap = bidsmap_template["bidsmap"]
-    entry_templates = ["entry_templates"]
     
     for key, value in filter.items():
         key_config = config["labels"][key]["bids"]

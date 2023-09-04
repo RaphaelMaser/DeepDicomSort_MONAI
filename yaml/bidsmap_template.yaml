@@ -63,7 +63,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &anat_dicoment_nonparametric  # See: schema/datatypes/anat.yaml
-        acq: <SeriesDescription>    # This will be expanded by the bidsmapper (so the user can edit it in the bidseditor)
+        acq:    # This will be expanded by the bidsmapper (so the user can edit it in the bidseditor)
         ce:
         rec:
         run: <<1>>                  # This will be updated dynamically during bidscoiner runtime (as it depends on the already existing files)
@@ -91,8 +91,8 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &perf_dicoment_group1         # See: schema/datatypes/perf.yaml
-        acq: <ProtocolName>
-        rec: <SeriesDescription>
+        acq:
+        rec: 
         dir:
         run: <<1>>
         suffix: asl
@@ -126,7 +126,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &dwi_dicoment_DWI             # See: schema/datatypes/dwi.yaml
-        acq: <ProtocolName>               # More consistent between SBREF and PHYSIO files
+        acq:              # More consistent between SBREF and PHYSIO files
         rec:
         dir:
         run: <<1>>
@@ -155,7 +155,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &extra_data_bids_dicom
-        acq: <ProtocolName>
+        acq:
         inv:
         rec:
         ce:
