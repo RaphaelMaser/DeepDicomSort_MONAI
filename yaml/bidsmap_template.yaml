@@ -63,7 +63,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &anat_dicoment_nonparametric  # See: schema/datatypes/anat.yaml
-        acq:    # This will be expanded by the bidsmapper (so the user can edit it in the bidseditor)
+        acq: <SeriesDescription> # This will be expanded by the bidsmapper (so the user can edit it in the bidseditor)
         ce:
         rec:
         run: <<1>>                  # This will be updated dynamically during bidscoiner runtime (as it depends on the already existing files)
@@ -91,7 +91,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &perf_dicoment_group1         # See: schema/datatypes/perf.yaml
-        acq:
+        acq: <SeriesDescription>
         rec: 
         dir:
         run: <<1>>
@@ -126,7 +126,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &dwi_dicoment_DWI             # See: schema/datatypes/dwi.yaml
-        acq:              # More consistent between SBREF and PHYSIO files
+        acq: <SeriesDescription>              # More consistent between SBREF and PHYSIO files
         rec:
         dir:
         run: <<1>>
@@ -155,7 +155,7 @@ entry_templates:
         RepetitionTime:
         InPlanePhaseEncodingDirection:
       bids: &extra_data_bids_dicom
-        acq:
+        acq: <SeriesDescription>
         inv:
         rec:
         ce:
@@ -163,12 +163,12 @@ entry_templates:
         echo: <EchoNumbers>
         dir:
         run: <<1>>
-        mod: <SeriesDescription>
-        part: ['', mag, phase, real, imag, 0]
+        mod: 
+        part: #['', mag, phase, real, imag, 0]
         suffix: <ScanningSequence>
-    - provenance:                         # The last item, taken if nothing else matches
-      attributes: *extra_data_attributes_dicom
-      bids: *extra_data_bids_dicom
+    # - provenance:                         # The last item, taken if nothing else matches
+    #   attributes: *extra_data_attributes_dicom
+    #   bids: *extra_data_bids_dicom
 
     # exclude:    # ----------------------- Data that will be left out -------------
     # - provenance:

@@ -1,6 +1,6 @@
-/data
-/cache
-/trained_models
-/__pycache__
-/utils/__pycache__
-/output
+data
+cache
+trained_models
+__pycache__
+utils/__pycache__
+output
